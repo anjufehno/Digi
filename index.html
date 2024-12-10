@@ -1,34 +1,47 @@
 <!doctype html>
 <html>
   <head>
-    <title>Простая струна</title>
+    <title>Гитара</title>
     <script src="https://cdn.jsdelivr.net/npm/p5@1.11.1/lib/p5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/addons/p5.sound.min.js"></script>
     <script>
-      let частота = 220; // Базовая частота звука (A3)
+      let струны = [];
+      let частоты = [82.41, 110.00, 146.83, 196.00, 246.94, 329.63]; // Ноты E, A, D, G, B, e
 
       function setup() {
         createCanvas(600, 400);
-        background(200);
-        textSize(24);
-        textAlign(CENTER, CENTER);
-        text("Кликните на экран, чтобы сыграть звук", width / 2, height / 2);
+        for (let i = 0; i < частоты.length; i++) {
+          струны.push({ y: (i + 1) * 50, частота: частоты[i] });
+        }
+      }
+
+      function draw() {
+        background(220);
+        stroke(0);
+        for (let струна of струны) {
+          line(50, струна.y, width - 50, струна.y); // Рисуем струны
+        }
       }
 
       function mousePressed() {
-        playNote(частота);
+        for (let струна of струны) {
+          if (mouseY > струна.y - 10 && mouseY < струна.y + 10) {
+            playNote(струна.частота); // Играем ноту
+          }
+        }
       }
 
-      function playNote(freq) {
-        let осц = new p5.Oscillator('sine'); // Генерация звука
-        осц.freq(freq);
-        осц.start();
-        осц.amp(0.5, 0.1); // Громкость
-        осц.stop(0.5); // Длительность 0.5 секунды
+      function playNote(частота) {
+        let осциллятор = new p5.Oscillator('sine');
+        осциллятор.freq(частота);
+        осциллятор.start();
+        осциллятор.amp(0.5, 0.1);
+        осциллятор.stop(0.5); // Нота звучит полсекунды
       }
     </script>
   </head>
   <body>
-    <h1>Простая струна</h1>
+    <h1>Гитара</h1>
+    <p>Кликай на струны, чтобы услышать звук!</p>
   </body>
 </html>
